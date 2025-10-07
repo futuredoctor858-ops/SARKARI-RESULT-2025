@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login - Sarkari Result</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Admin Panel</h1>
+  </header>
+
+  <main class="admin-main">
+    <div class="login-box" id="login-box">
+      <h2>Admin Login</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p id="login-msg"></p>
+    </div>
+
+    <div class="dashboard hidden" id="dashboard">
+      <h2>Welcome, Admin!</h2>
+      <button onclick="logout()">Logout</button>
+
+      <h3>Add New Link</h3>
+      <select id="section-select">
+        <option value="results-list">Results</option>
+        <option value="admit-list">Admit Cards</option>
+        <option value="form-list">Online Forms</option>
+      </select>
+      <input type="text" id="new-link-text" placeholder="Link Title" />
+      <input type="text" id="new-link-url" placeholder="URL" />
+      <button onclick="addLink()">Add Link</button>
+
+      <h3>Saved Data</h3>
+      <pre id="data-output"></pre>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Sarkari Result Clone | Admin Panel</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
