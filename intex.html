@@ -1,60 +1,285 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sarkari Result 2025</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SarkariResult - Demo (Local)</title>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1220;--accent:#0ea5a3;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Arial,Helvetica,sans-serif}
+    body{margin:0;background:linear-gradient(180deg,#071029 0%, #071a2e 100%);color:#e6eef6}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:transparent}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#1e40af);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{margin:0;font-size:20px}
+    .controls{display:flex;gap:12px;align-items:center}
+    button, input[type="button"]{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:#052024;cursor:pointer}
+    main{display:grid;grid-template-columns:1fr 360px;gap:20px;padding:20px}
+    .left{min-height:60vh}
+    .searchBar{display:flex;gap:8px;margin-bottom:14px}
+    .searchBar input{flex:1;padding:10px;border-radius:8px;border:none;background:var(--glass);color:inherit}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;margin-bottom:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .post-title{font-size:16px;margin:0}
+    .meta{color:var(--muted);font-size:13px;margin-top:6px}
+    .small{font-size:13px;color:var(--muted)}
+    .sidebar{position:sticky;top:20px}
+    label{display:block;font-size:13px;margin-bottom:6px}
+    .form-row{display:flex;gap:8px}
+    textarea, input, select{width:100%;padding:10px;border-radius:8px;border:none;background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.04)}
+    .admin-box{margin-bottom:12px}
+    .post-actions{display:flex;gap:8px;margin-top:10px}
+    .danger{background:#ef4444;color:white}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .ad-box{height:150px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;color:var(--muted);margin-bottom:12px}
+    footer{padding:12px 22px;color:var(--muted);font-size:13px}
+    .tag{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);margin-right:6px;font-size:12px}
+    .login-badge{font-size:13px;color:var(--muted)}
+    .file-link{color:var(--accent);text-decoration:none}
+    .empty{padding:20px;text-align:center;color:var(--muted)}
+    @media(max-width:900px){main{grid-template-columns:1fr} .sidebar{position:static}}
+  </style>
 </head>
 <body>
   <header>
-    <h1>SARKARI RESULT 2025</h1>
-    <p>www.sarkariresult.com</p>
+    <div class="brand">
+      <div class="logo">SR</div>
+      <div>
+       <h1>SarkariResult</h1>
+
+       <div class="small">Exam updates, admit cards, results — demo site</div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="login-badge" id="loginBadge">Not logged in</div>
+      <button id="btnLogin">Admin Login</button>
+      <button id="btnSetAdmin" title="Change admin id/password">Set Admin</button>
+    </div>
   </header>
 
-  <nav>
-    <a href="index.html" class="active">Home</a>
-    <a href="results.html">Results</a>
-    <a href="admitcard.html">Admit Card</a>
-    <a href="form.html">Online Form</a>
-    <a href="admin.html">Admin</a>
-  </nav>
-
   <main>
-    <section class="grid">
-      <div class="card">
-        <h2>Results</h2>
-        <ul id="results-list">
-          <li><a href="#">SSC CGL 2025 Result</a></li>
-          <li><a href="#">UPSC Civil Services Result</a></li>
-          <li><a href="#">Railway Group D Result</a></li>
-        </ul>
+    <section class="left">
+      <div class="card searchCard">
+        <div class="searchBar">
+          <input id="searchInput" placeholder="Search by title, exam, date..." />
+          <button id="searchBtn">Search</button>
+        </div>
+        <div class="small">Available posts: <span id="totalCount">0</span></div>
       </div>
 
-      <div class="card">
-        <h2>Admit Cards</h2>
-        <ul id="admit-list">
-          <li><a href="#">UP Police Constable Admit Card</a></li>
-          <li><a href="#">IBPS PO Admit Card</a></li>
-          <li><a href="#">NDA Exam Admit Card</a></li>
-        </ul>
-      </div>
+      <div id="postsContainer"></div>
 
-      <div class="card">
-        <h2>Online Forms</h2>
-        <ul id="form-list">
-          <li><a href="#">SSC CHSL 2025 Apply Online</a></li>
-          <li><a href="#">UPSC NDA 2025 Form</a></li>
-          <li><a href="#">Indian Navy Recruitment Form</a></li>
-        </ul>
-      </div>
+      <div id="pagination" class="card" style="display:none"></div>
     </section>
+
+    <aside class="sidebar">
+      <div class="card admin-box" id="adminPanel">
+        <h3 style="margin-top:0">Admin Panel</h3>
+        <div id="adminControls">
+          <label>Title</label>
+          <input id="postTitle" placeholder="Exam / Notification title" />
+          <label>Category</label>
+          <input id="postCategory" placeholder="e.g., Admit Card, Result, Answer Key" />
+          <label>Date</label>
+          <input id="postDate" type="date" />
+          <label>Short description</label>
+          <textarea id="postDesc" rows="3" placeholder="Short summary"></textarea>
+          <label>Official Link / PDF URL</label>
+          <input id="postLink" placeholder="https://example.gov.in/result.pdf" />
+          <div class="post-actions">
+            <button id="savePost">Save Post</button>
+            <button class="ghost" id="clearForm">Clear</button>
+          </div>
+        </div>
+        <div class="small" style="margin-top:10px">(Add posts — they'll be stored in browser storage. For production, connect to a backend DB.)</div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-top:0">Quick Filters</h4>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="ghost" onclick="filterBy('All')">All</button>
+          <button class="ghost" onclick="filterBy('Result')">Result</button>
+          <button class="ghost" onclick="filterBy('Admit Card')">Admit Card</button>
+          <button class="ghost" onclick="filterBy('Answer Key')">Answer Key</button>
+        </div>
+      </div>
+
+      <div class="ad-box" id="adSlot">AD PLACEHOLDER<br/><small class="small">(Replace with AdSense code)</small></div>
+
+      <div class="card">
+        <h4 style="margin-top:0">How to add Google AdSense</h4>
+        <ol class="small">
+          <li>Signup for AdSense and get your <code>script</code> (publisher ID).</li>
+          <li>Replace the <em>adSlot</em> div above with the script snippet AdSense provides.</li>
+          <li>On Netlify, ensure your site is served over HTTPS and domain is verified in AdSense settings.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-top:0">Export / Import</h4>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="exportBtn">Export JSON</button>
+          <button id="importBtn" class="ghost">Import JSON</button>
+        </div>
+        <input type="file" id="importFile" style="display:none" accept="application/json" />
+      </div>
+
+    </aside>
   </main>
 
   <footer>
-    <p>© 2025 Sarkari Result Clone | Designed for Practice</p>
+    This is a local demo. For production: move data to a server (Node/Express + database), secure admin with server auth, and integrate official ad scripts.
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Modals (simple) -->
+  <div id="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:9999">
+    <div style="width:420px;max-width:96%;background:#071022;padding:16px;border-radius:12px">
+      <div id="modalContent"></div>
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px">
+        <button id="modalClose" class="ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Simple local-only admin + posts system. NOT secure for production.
+const STORAGE_KEY='sr_posts_v1';
+const ADMIN_KEY='sr_admin_v1';
+let posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let admin = JSON.parse(localStorage.getItem(ADMIN_KEY) || 'null');
+let loggedIn=false; let currentFilter='All';
+
+// DOM
+const postsContainer = document.getElementById('postsContainer');
+const totalCount = document.getElementById('totalCount');
+const loginBadge = document.getElementById('loginBadge');
+const btnLogin = document.getElementById('btnLogin');
+const btnSetAdmin = document.getElementById('btnSetAdmin');
+const adminPanel = document.getElementById('adminPanel');
+
+function render(){
+  postsContainer.innerHTML='';
+  let list = posts.slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+  if(currentFilter!=='All') list = list.filter(p=>p.category===currentFilter);
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if(q) list = list.filter(p=> (p.title+p.desc+p.category+ (p.link||'')).toLowerCase().includes(q));
+  totalCount.textContent = list.length;
+  if(list.length===0){ postsContainer.innerHTML='<div class="card empty">Koi post nahi mila — admin login karke add karein.</div>'; return }
+  list.forEach((p,idx)=>{
+    const el = document.createElement('div'); el.className='card';
+    el.innerHTML = `
+      <h3 class="post-title">${escapeHtml(p.title)}</h3>
+      <div class="meta">${escapeHtml(p.category)} • ${formatDate(p.date)} • <a class="file-link" href="${escapeAttr(p.link||'#')}" target="_blank">View</a></div>
+      <p class="small">${escapeHtml(p.desc)}</p>
+    `;
+    if(loggedIn){
+      const actions = document.createElement('div'); actions.className='post-actions';
+      const edit = document.createElement('button'); edit.textContent='Edit'; edit.onclick=()=>editPost(p.id);
+      const del = document.createElement('button'); del.textContent='Delete'; del.className='danger'; del.onclick=()=>deletePost(p.id);
+      actions.appendChild(edit); actions.appendChild(del);
+      el.appendChild(actions);
+    }
+    postsContainer.appendChild(el);
+  })
+}
+
+function escapeHtml(s){ if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;') }
+function formatDate(d){ if(!d) return ''; const dt=new Date(d); return dt.toLocaleDateString('en-IN'); }
+
+// Admin form
+const postTitle = document.getElementById('postTitle');
+const postCategory = document.getElementById('postCategory');
+const postDate = document.getElementById('postDate');
+const postDesc = document.getElementById('postDesc');
+const postLink = document.getElementById('postLink');
+const savePost = document.getElementById('savePost');
+const clearForm = document.getElementById('clearForm');
+let editingId = null;
+
+savePost.addEventListener('click',()=>{
+  if(!loggedIn){ showModal('You must be logged in as admin to save posts.'); return }
+  const t = postTitle.value.trim(); if(!t){ showModal('Title required'); return }
+  const obj = { id: editingId || 'p_'+Date.now(), title:t, category:postCategory.value.trim()||'General', date:postDate.value||new Date().toISOString().slice(0,10), desc:postDesc.value.trim(), link:postLink.value.trim() };
+  if(editingId){ posts = posts.map(p=>p.id===editingId?obj:p); editingId=null; }
+  else posts.push(obj);
+  savePosts(); clearInputs(); render(); showModal('Saved');
+});
+clearForm.addEventListener('click',clearInputs);
+function clearInputs(){ postTitle.value=''; postCategory.value=''; postDate.value=''; postDesc.value=''; postLink.value=''; editingId=null }
+function editPost(id){ const p = posts.find(x=>x.id===id); if(!p) return; postTitle.value=p.title; postCategory.value=p.category; postDate.value=p.date; postDesc.value=p.desc; postLink.value=p.link; editingId=id; window.scrollTo({top:0,behavior:'smooth'}); }
+function deletePost(id){ if(!confirm('Delete this post?')) return; posts = posts.filter(p=>p.id!==id); savePosts(); render(); }
+
+function savePosts(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); }
+
+// Admin: set account
+btnSetAdmin.addEventListener('click',()=>{
+  const html = `
+    <h3>Set Admin ID & Password</h3>
+    <label>Admin ID</label><input id="m_admin" placeholder="admin" />
+    <label>Password</label><input id="m_pass" placeholder="password" />
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+      <button id="saveAdmin">Save</button>
+    </div>
+  `;
+  showModalInner(html);
+  document.getElementById('saveAdmin').onclick = ()=>{
+    const aid = document.getElementById('m_admin').value.trim(); const ap = document.getElementById('m_pass').value.trim();
+    if(!aid||!ap){ alert('Both required'); return }
+    admin = {id:aid, pass:ap}; localStorage.setItem(ADMIN_KEY, JSON.stringify(admin)); hideModal(); updateLoginUI(); showModal('Admin saved locally. For production, use server-side auth.');
+  }
+});
+
+// Login
+btnLogin.addEventListener('click',()=>{
+  if(loggedIn){ logout(); return }
+  const html = `
+    <h3>Admin Login</h3>
+    <label>Admin ID</label><input id="li_admin" placeholder="admin" />
+    <label>Password</label><input id="li_pass" placeholder="password" />
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+      <button id="doLogin">Login</button>
+    </div>
+  `;
+  showModalInner(html);
+  document.getElementById('doLogin').onclick = ()=>{
+    const aid=document.getElementById('li_admin').value.trim(); const ap=document.getElementById('li_pass').value.trim();
+    if(!admin){ alert('No admin set. Use "Set Admin" first.'); return }
+    if(aid===admin.id && ap===admin.pass){ loggedIn=true; updateLoginUI(); hideModal(); showModal('Logged in'); }
+    else alert('Invalid');
+  }
+});
+function logout(){ loggedIn=false; updateLoginUI(); showModal('Logged out'); }
+
+function updateLoginUI(){ loginBadge.textContent = loggedIn? ('Logged in as '+ (admin?admin.id:'admin')) : 'Not logged in'; btnLogin.textContent = loggedIn? 'Logout' : 'Admin Login'; adminPanel.style.display = loggedIn? 'block' : 'none'; }
+
+// Modal helpers
+const modal = document.getElementById('modal'); const modalContent = document.getElementById('modalContent'); const modalClose = document.getElementById('modalClose');
+function showModal(text){ modalContent.innerHTML = `<div class=\"small\">${text}</div>`; modal.style.display='flex'; }
+function showModalInner(html){ modalContent.innerHTML = html; modal.style.display='flex'; }
+function hideModal(){ modal.style.display='none'; }
+modalClose.onclick = hideModal;
+
+// Filters & search
+function filterBy(cat){ currentFilter=cat; render(); }
+document.getElementById('searchBtn').onclick = render;
+
+// Export / Import
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const data = JSON.stringify(posts, null, 2);
+  const blob = new Blob([data],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='sarkari_posts.json'; a.click(); URL.revokeObjectURL(url);
+});
+const importFile = document.getElementById('importFile'); document.getElementById('importBtn').addEventListener('click',()=> importFile.click());
+importFile.onchange = (e)=>{
+  const f = e.target.files[0]; if(!f) return; const reader = new FileReader(); reader.onload = ()=>{ try{ const j = JSON.parse(reader.result); if(!Array.isArray(j)) throw 'Invalid'; posts = j; savePosts(); render(); showModal('Imported'); }catch(err){ alert('Invalid JSON') } }; reader.readAsText(f);
+};
+
+// Startup
+(function(){
+  updateLoginUI(); render();
+})();
+
+</script>
 </body>
 </html>

@@ -1,3 +1,115 @@
+// Simple admin credentials
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "12345";
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  const msg = document.getElementById("login-msg");
+
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    localStorage.setItem("adminLoggedIn", "true");
+    document.getElementById("login-box").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    msg.textContent = "";
+    loadData();
+  } else {
+    msg.textContent = "Invalid credentials!";
+  }
+}
+
+function logout() {
+  localStorage.removeItem("adminLoggedIn");
+  document.getElementById("login-box").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+}
+
+function addLink() {
+  const section = document.getElementById("section-select").value;
+  const text = document.getElementById("new-link-text").value;
+  const url = document.getElementById("new-link-url").value;
+
+  if (text && url) {
+    const data = JSON.parse(localStorage.getItem("links")) || {};
+    if (!data[section]) data[section] = [];
+    data[section].push({ text, url });
+    localStorage.setItem("links", JSON.stringify(data));
+    alert("Link added!");
+    loadData();
+  }
+}
+
+function loadData() {
+  const data = JSON.parse(localStorage.getItem("links")) || {};
+  document.getElementById("data-output").textContent = JSON.stringify(data, null, 2);
+}
+
+window.onload = function() {
+  const loggedIn = localStorage.getItem("adminLoggedIn");
+  if (loggedIn && document.getElementById("dashboard")) {
+    document.getElementById("login-box").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    loadData();
+  }
+};
+// Custom admin credentials
+const ADMIN_USER = "premadmin";
+const ADMIN_PASS = "Prem@123";
+
+function login() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+  const msg = document.getElementById("login-msg");
+
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    localStorage.setItem("adminLoggedIn", "true");
+    document.getElementById("login-box").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    msg.textContent = "";
+    loadData();
+  } else {
+    msg.textContent = "❌ Invalid username or password!";
+    msg.style.color = "red";
+  }
+}
+
+function logout() {
+  localStorage.removeItem("adminLoggedIn");
+  document.getElementById("login-box").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+}
+
+function addLink() {
+  const section = document.getElementById("section-select").value;
+  const text = document.getElementById("new-link-text").value.trim();
+  const url = document.getElementById("new-link-url").value.trim();
+
+  if (text && url) {
+    const data = JSON.parse(localStorage.getItem("links")) || {};
+    if (!data[section]) data[section] = [];
+    data[section].push({ text, url });
+    localStorage.setItem("links", JSON.stringify(data));
+    alert("✅ Link added successfully!");
+    loadData();
+  } else {
+    alert("⚠️ Please fill in both the link title and URL!");
+  }
+}
+
+function loadData() {
+  const data = JSON.parse(localStorage.getItem("links")) || {};
+  const output = document.getElementById("data-output");
+  output.textContent = JSON.stringify(data, null, 2);
+}
+
+window.onload = function() {
+  const loggedIn = localStorage.getItem("adminLoggedIn");
+  if (loggedIn && document.getElementById("dashboard")) {
+    document.getElementById("login-box").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    loadData();
+  }
+};
 // === Admin credentials ===
 const ADMIN_USER = "premadmin";
 const ADMIN_PASS = "Prem@123";

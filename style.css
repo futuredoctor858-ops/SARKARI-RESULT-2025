@@ -113,8 +113,7 @@ button:hover {
 
 .hidden {
   display: none;
-}
-.del-btn {
+}.del-btn {
   background: crimson;
   color: white;
   border: none;
@@ -127,3 +126,4 @@ button:hover {
 .del-btn:hover {
   background: darkred;
 }
+
